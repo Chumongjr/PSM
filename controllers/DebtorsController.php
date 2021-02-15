@@ -61,7 +61,8 @@ class DebtorsController extends Controller
         foreach ($debs as $deb)
         {
             $tbDebtors .= "<tr><td>$i</td><td>$deb[1]</td><td>$deb[2]</td><td>$deb[3]</td><td>$deb[4]</td><td>$deb[5]</td>";
-            $tbDebtors .= "<td><b>" . Html::button('<i class="fa fa-edit"></i> Update Details', ['value'=>Url::to(['debtors/debtor-update','debid'=>$deb[0]]),'title'=>'Update Debtor Info','class' => 'showModalButton btn btn-success btn-xs']) . "</b> | ";
+            //$tbDebtors .= "<td><b>" . Html::button('<i class="fa fa-edit"></i> Update Details', ['value'=>Url::to(['debtors/debtor-update','debid'=>$deb[0]]),'title'=>'Update Debtor Info','class' => 'showModalButton btn btn-success btn-xs']) . "</b> | ";
+            $tbDebtors .= "<td><b>" . Html::a('<i class="fa fa-folder-open"></i> View Details', ['debtors/debtordet','debid'=>$deb[0]], ['class' => 'btn btn-success btn-xs']) . "</b> | ";
             $tbDebtors .= "<b>" . Html::a('<i class="fa fa-shopping-cart"></i> Make Order', ['debtors/debtor-order','debid'=>$deb[0]], ['class' => 'btn btn-info btn-xs']) . "</b></td></tr>";
             $i++;
         }
@@ -78,11 +79,54 @@ class DebtorsController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionDebtordet($debid)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
+        $con = Yii::$app->db;
+        $debhist = $this->debthist($debid);
+        $d = "select debtor_code,debtor_name,address,tellephone,email,contact_person,phone_no,
+                case invoice_period when 1 then 7 when 2 then 15 when 3 then 30 end invoice_period
+                from debtors where debtor_id = :debid";
+        $debdet = $con->createCommand($d)->bindParam(':debid',$debid)->queryOne(0);
+
+        return $this->render('debtordet', [
+            'model' => $this->findModel($debid),'debid'=>$debid,
+            'debdet'=>$debdet,'debhist'=>$debhist,
         ]);
+    }
+
+    protected function debthist($debid)
+    {
+        $l = "select d.debtor_code,d.debtor_name,s.invoice_no,total_litres,total_sale,
+            case s.status when 'C' then 'Invoice Created' when 'I' then 'Partial Payment' when 'P' then 'Paid' end bill_status,
+            date_format(s.crdate,'%d-%b-%Y') crdate
+            from debtor_sales s
+            inner join debtors d on d.debtor_id=s.debtor_id where d.debtor_id = :debid order by s.crdate desc";
+        $lbill = Yii::$app->db->createCommand("$l")->bindParam(':debid',$debid)->queryAll(0);
+        $bgroup = 'Pending';
+        $tbBills = "<table id='example1' class='table table-striped table-bordered'>";
+        $tbBills .="<thead><tr><th>SN</th><th>Invoice No</th><th>Date Taken</th><th>Litres</th><th>Total Amount</th><th>Status</th></tr></thead><tbody>";
+        $i=1;
+        foreach ($lbill as $lb)
+        {
+            $tbBills .= "<tr><td>$i</td><td>". Html::a('INV#'.$lb[2],['debtors/invoice-bill','invid'=>$lb[2]])."</td><td>$lb[6]</td><td>".number_format($lb[3])."</td><td>".number_format($lb[4],2)."</td>";
+            if($lb[5] == 'Invoice Created' ){
+                $tbBills .="<td align='center'><span class='badge badge-danger'>Invoice Created</span></td></tr>";
+               // $tbBills .= "<td><b>" . Html::a('<i class="fa fa-eye"></i> View Detail', ['debtors/invoice-bill','invid'=>$lb[2]]) . "</b></td></tr>";
+
+            }elseif ($lb[5]=='Paid'){
+                $tbBills .="<td align='center'><span class='badge badge-info'>Paid</span></td></tr>";
+               // $tbBills .= "<td><b>" . Html::a('<i class="fa fa-eye"></i> View Detail', ['debtors/invoice-bill','invid'=>$lb[2]]) . "</b></td></tr>";
+
+            }elseif ($lb[5]=='Partial Payment'){
+                $tbBills .="<td align='center'><span class='badge badge-warning'>Partial Payment</span></td></tr>";
+            }
+            //$tbBills .= "<td><b>" . Html::a('<i class="fa fa-eye"></i> View Detail', ['debtors/invoice-bill','invid'=>$lb[2]]) . "</b></td></tr>";
+
+            $i++;
+        }
+        $tbBills .="</tbody></table>";
+
+        return $tbBills;
     }
 
     /**
@@ -745,7 +789,8 @@ class DebtorsController extends Controller
 
 
         $pdf = new Yii::$app->pdf;
-        $reportFile = 'reports/'.$company_name.'-'. strtotime(date('Y-m-d H:i:s')) . '-sales.pdf';
+        //$reportFile = 'reports/'.$company_name.'-'. strtotime(date('Y-m-d H:i:s')) . '-sales.pdf';
+        $reportFile = 'reports/'.$company_name.'-sales.pdf';
         $htmlContent = $this->renderPartial('auto_report',[
             'daysales'=>$daysales,'yesterday'=>$yesterday
         ]);
@@ -771,7 +816,7 @@ class DebtorsController extends Controller
         $yesterday = date('d/m/Y',strtotime("-1 days"));
         $getattchment = $this->autoReport();
         $company_name = $con->createCommand("select company_name from company_profile")->queryScalar();
-        $reportFile = 'reports/'.$company_name.'-'. strtotime(date('Y-m-d H:i:s')) . '-sales.pdf';
+        $reportFile = 'reports/'.$company_name.'-sales.pdf';
         $mail = $con->createCommand("select first_name,email from tbl_user where groupid = 2")->queryOne(0);
 
         $message = '<div class="site-index">';

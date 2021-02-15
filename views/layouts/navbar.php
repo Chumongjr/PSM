@@ -45,13 +45,13 @@ use app\models\User;
 
         <li class="nav-item dropdown user-menu">
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                <img src="<?=$assetDir?>/img/user-img.jpg" class="user-image img-circle elevation-2" alt="User Image">
+                <img src="../web/dist/img/user-img.jpg" class="user-image img-circle elevation-2" alt="User Image">
                 <span class="d-none d-md-inline"><?php echo Yii::$app->user->identity->fullname; ?></span>
             </a>
             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <!-- User image -->
                 <li class="user-header bg-primary">
-                    <img src="<?=$assetDir?>/img/user-img.jpg" class="img-circle elevation-2" alt="User Image">
+                    <img src="../web/dist/img/user-img.jpg" class="img-circle elevation-2" alt="User Image">
 
                     <p>
                         <?php echo Yii::$app->user->identity->fullname; ?>
