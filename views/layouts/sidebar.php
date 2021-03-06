@@ -51,8 +51,27 @@ use app\models\APPRoles;
                             ['label' => 'Oil Price','url'=>['oiltype/index'], 'iconStyle' => 'far'],
                         ], 'visible' => APPRoles::isManager()
                     ],
+                    [
+                        'label' => 'Payroll',
+                        'icon' => 'tachometer-alt',
+                        //'badge' => '<span class="right badge badge-info">2</span>',
+                        'items' => [
+                            ['label' => 'Employee', 'url' => ['users/index'],'iconStyle' => 'far', 'iconClassAdded' => 'text-info', 'visible' => APPRoles::isManager()],
+                            ['label' => 'HR Payroll', 'url' => ['stations/index'],'iconStyle' => 'far', 'iconClassAdded' => 'text-success', 'visible' => APPRoles::isManager()],
+                            [
+                                'label' => 'HR Maintainance',
+                                'icon' => 'tachometer-alt',
+                                //'badge' => '<span class="right badge badge-info">2</span>',
+                                'items' => [
+                                    ['label' => 'Position', 'url' => ['users/position'], 'iconStyle' => 'far'],
+                                    ['label' => 'Benefits', 'url' => ['benefits/index'],'iconStyle' => 'far', 'iconClassAdded' => 'text-success', 'visible' => APPRoles::isManager()],
+                                    ['label' => 'Deductions', 'url'=>['benefits/dedlist'],'iconStyle' => 'far'],
+                                    ['label' => 'Loans','url'=>['benefits/loanlist'], 'iconStyle' => 'far'],
+                                ],
+                            ],
+                        ], 'visible' => APPRoles::isManager()
+                    ],
                     //['label' => 'Simple Link', 'icon' => 'th', 'badge' => '<span class="right badge badge-danger">New</span>'],
-                    ['label' => 'System Users', 'url' => ['users/index'],'iconStyle' => 'far', 'iconClassAdded' => 'text-info', 'visible' => APPRoles::isManager()],
                     ['label' => 'Reports', 'url' => ['stationsells/report'],'iconStyle' => 'far', 'iconClassAdded' => 'text-primary'],
                    // ['label' => 'Yii2 PROVIDED', 'header' => true],
                     //['label' => 'Login', 'url' => ['site/login'], 'icon' => 'sign-in-alt', 'visible' => Yii::$app->user->isGuest],

@@ -34,40 +34,36 @@ use yii\bootstrap\Modal;
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-lg-12">
-                                <div class="panel-body">
-                                    <div class="box box-info">
-                                        <div class="box-body">
-                                            <div class="col-sm-8">
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <div  align="center">
-                                                            <?= Html::img(Url::to('@web/dist/img/user-img.jpg'), ['alt' => 'Signature','id'=>'profile-image1','class'=>'img-circle img-responsive']) ?>
-                                                            <input id="profile-image-upload" class="hidden" type="file">
-                                                            <div style="color:#999;" >click here to change profile image</div>
-                                                            <br>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <h4 style="color:#00b1b1;"><?php echo $userdet[0] ?> <?php echo $userdet[1] ?> </h4></span>
-                                                        <span><p><?php echo $userdet[5] ?></p></span>
-                                                    </div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                                <hr style="margin:5px 0 5px 0;">
-                                                <div class="row">
-                                                    <div class="col-sm-5 col-xs-6 title " ><b>First Name:<b></b></div><div class="col-sm-7 col-xs-6 "><?php echo $userdet[0] ?></div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                                <div class="bot-border"></div>
-                                                <div class="row">
-                                                    <div class="col-sm-5 col-xs-6 title " ><b>Last Name:</b></div><div class="col-sm-7 col-xs-6 "><?php echo $userdet[1] ?></div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                                <div class="bot-border"></div>
-                                                <div class="row">
-                                                    <div class="col-sm-5 col-xs-6 title " ><b>Email:</b></div><div class="col-sm-7 col-xs-6 "><?php echo $userdet[2] ?></div>
-                                                </div>
+                            <div class="col-lg-4">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div  align="center">
+                                            <?= Html::img(Url::to('@web/dist/img/user-img.jpg'), ['alt' => 'Signature','id'=>'profile-image1','class'=>'img-circle img-responsive']) ?>
+                                            <input id="profile-image-upload" class="hidden" type="file">
+                                            <div style="color:#999;" >click here to change profile image</div>
+                                            <br>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <h4 style="color:#00b1b1;"><?php echo $userdet[0] ?> <?php echo $userdet[1] ?> </h4></span>
+                                        <span><p><?php echo $userdet[5] ?></p></span>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <hr style="margin:5px 0 5px 0;">
+                                <div class="row">
+                                    <div class="col-sm-5 col-xs-6 title " ><b>First Name:</b></div><div class="col-sm-7 col-xs-6 "><?php echo $userdet[0] ?></div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="bot-border"></div>
+                                <div class="row">
+                                    <div class="col-sm-5 col-xs-6 title " ><b>Last Name:</b></div><div class="col-sm-7 col-xs-6 "><?php echo $userdet[1] ?></div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="bot-border"></div>
+                                <div class="row">
+                                    <div class="col-sm-5 col-xs-6 title " ><b>Email:</b></div><div class="col-sm-7 col-xs-6 "><?php echo $userdet[2] ?></div>
+                                </div>
                                                 <div class="clearfix"></div>
                                                 <div class="bot-border"></div>
                                                 <div class="row">
@@ -88,12 +84,27 @@ use yii\bootstrap\Modal;
                                                 <div class="clearfix"></div>
                                                 <div class="bot-border"></div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="col-lg-4">
+                                <table class="table table-condensed">
+                                    <tr><th colspan="3">Employee Details</th></tr>
+                                    <tr><td>Basic Salary</td><td colspan="2"> 3,000,000/=</td></tr>
+                                    <tr><td>Benefits </td><td> 1,000,000/=</td><td><?=Html::a('<i class="fa fa-print"></i> View Benefits', ['/debtors/print-receipt'], ['class' => 'btn bg-info btn-sm'])?></td></tr>
+                                    <tr><td>Deductions </td><td> 500,000/=</td><td><?=Html::a('<i class="fa fa-print"></i> View Deductions', ['/debtors/print-receipt'], ['class' => 'btn bg-info btn-sm'])?></td></tr>
+                                    <tr><td>Loans </td><td> 100,000/=</td><td><?=Html::a('<i class="fa fa-print"></i> View Loans', ['/debtors/print-receipt'], ['class' => 'btn bg-info btn-sm'])?></td></tr>
+                                    <tr><td>Payee </td><td colspan="2"> 860,000/=</td></tr>
+                                    <tr><td>Gross Pay </td><td colspan="2"> 4,000,000/=</td></tr>
+                                    <tr style="background-color:#999;"><td >Net Pay </td><td colspan="2"> 2,540,000/=</td></tr>
 
-                        </div>
+                                </table>
+                            </div>
+                            <div class="col-lg-4">
+                                <table class="table table-condensed">
+                                    <tr><th>Current Month</th><th colspan="2"> March 2021</th></tr>
+                                    <tr><th>Account No :</th><td colspan="2"> 0J2458762135</td></tr>
+                                    <tr><th>Bank Name :</th><td colspan="2"> CRDB BANK,plc</td></tr>
+                                    <tr><th>Get Salary Slip </th><td><?=Html::a('<i class="fa fa-print"></i> Print Slip', ['/debtors/print-receipt'], ['class' => 'btn bg-purple btn-sm'])?></td></tr>
+                                </table>
+                            </div>
                     </div>
                 </div>
             </div>

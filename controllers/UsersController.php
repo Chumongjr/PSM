@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\CompanyProfile;
 use Yii;
 use app\models\User;
+use app\models\Positions;
 use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -183,6 +184,7 @@ class UsersController extends Controller
         $r = "select first_name,last_name,email,username,case status when 'A' then 'Active' when 'S' then 'Suspended' end Status,
               case groupid when 1 then 'Admin' when 2 then 'Manager' when 3 then 'Supervisor' when 4 then 'Staff' end usertype  from tbl_user where id = '$id'";
         $userdet = Yii::$app->db->createCommand($r)->queryOne(0);
+
         return $this->render('profile_details',[
                 'id'=>$id,'userdet'=>$userdet,
         ]);
@@ -336,5 +338,53 @@ class UsersController extends Controller
     public function actionNoaccess()
     {
         return $this->render('noaccess');
+    }
+
+    public function actionPosition()
+    {
+        $modPos = new Positions();
+        $tbPos = $this->getpositions();
+
+        if(isset($_POST['btnpos']))
+        {
+            $modPos->load(Yii::$app->request->post());
+            $pos = $modPos->pos_name;
+
+            $cr = Yii::$app->db->createCommand("insert into positions(pos_name)values(:pos)")->bindParam(':pos',$pos)->execute();
+            if($cr)
+            {
+                Yii::$app->session->setFlash('success-crpos','Position Added Successfully');
+                return $this->redirect(['position']);
+            }
+        }
+
+        return $this->render('position',[
+            'modPos'=>$modPos,'tbPos'=>$tbPos
+        ]);
+    }
+
+    protected function getpositions()
+    {
+        $getPemethod = Yii::$app->db->createCommand("select posid,pos_name from positions order by posid asc")->queryAll(0);
+        $tbP = "<table id='example1' class='table table-striped table-bordered'>";
+        $tbP .="<thead><tr><th>SN</th><th>Position Name</th><th>Action</th></tr></thead><tbody>";
+        $i=1;
+        foreach ($getPemethod as $p)
+        {
+            $tbP .= "<tr><td>$i</td><td>$p[1]</td><td><b>" . Html::a('<i class="fa fa-trash-alt"></i> Remove', ['users/rmpos','pid'=>$p[0]],['class'=>'btn btn-warning btn-sm','onClick'=>'return confirm(" Are you sure you want to remove this")']) . "</b></td></tr>";
+            $i++;
+        }
+        $tbP .="</tbody></table>";
+
+        return $tbP;
+    }
+
+    public function actionRmpos($pid)
+    {
+        $remove = Yii::$app->db->createCommand("delete from positions where posid = :pid")->bindParam(':pid',$pid)->execute();
+
+        Yii::$app->session->setFlash('success-rmpos','Position Removed Successfully');
+        return $this->redirect(['pay-methods']);
+
     }
 }
